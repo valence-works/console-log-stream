@@ -62,7 +62,7 @@
 
 - [X] T022 Run `dotnet format --verify-no-changes ConsoleLogStream.slnx`
 - [X] T023 Run `dotnet test ConsoleLogStream.slnx`
-- [ ] T024 Inspect git status and prepare GitHub repository publication
+- [X] T024 Inspect git status and prepare GitHub repository publication
 
 ## Dependencies
 
