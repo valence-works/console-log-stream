@@ -21,6 +21,11 @@ public sealed record ConsoleLogFilter
     public string? Query { get; init; }
 
     /// <summary>
+    /// Optional exact workflow instance identifier.
+    /// </summary>
+    public string? WorkflowInstanceId { get; init; }
+
+    /// <summary>
     /// Inclusive lower bound for provider receive time.
     /// </summary>
     public DateTimeOffset? From { get; init; }

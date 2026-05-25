@@ -44,7 +44,7 @@ public sealed class InMemoryConsoleLogProvider : IConsoleLogProvider
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var receivedAt = DateTimeOffset.UtcNow;
+        var receivedAt = line.ReceivedAt;
         var redacted = _redactor.Redact(line with { ReceivedAt = receivedAt });
         var source = _sourceRegistry.MarkSeen(redacted.Source, receivedAt);
         redacted = redacted with { Source = source };
@@ -88,7 +88,10 @@ public sealed class InMemoryConsoleLogProvider : IConsoleLogProvider
             items = _recent
                 .Where(x => ConsoleLogFilterMatcher.IsMatch(x, filter))
                 .OrderBy(x => x.ReceivedAt)
+                .ThenBy(x => x.Timestamp)
+                .ThenBy(x => x.Source.Id, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(x => x.Sequence)
+                .ThenBy(x => x.Id, StringComparer.Ordinal)
                 .TakeLast(take)
                 .ToArray();
             dropped = _dropped.ToArray();

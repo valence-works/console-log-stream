@@ -31,6 +31,31 @@ public sealed record ConsoleLogSource
     public string? MachineName { get; init; }
 
     /// <summary>
+    /// Kubernetes pod name when available.
+    /// </summary>
+    public string? PodName { get; init; }
+
+    /// <summary>
+    /// Container name when available.
+    /// </summary>
+    public string? ContainerName { get; init; }
+
+    /// <summary>
+    /// Namespace name when available.
+    /// </summary>
+    public string? Namespace { get; init; }
+
+    /// <summary>
+    /// Node name when available.
+    /// </summary>
+    public string? NodeName { get; init; }
+
+    /// <summary>
+    /// Source startup timestamp when available.
+    /// </summary>
+    public DateTimeOffset? StartedAt { get; init; }
+
+    /// <summary>
     /// Most recent line timestamp observed for this source.
     /// </summary>
     public DateTimeOffset? LastSeen { get; init; }

@@ -6,6 +6,11 @@ namespace ConsoleLogStream.Core.Models;
 public enum ConsoleLogSourceHealth
 {
     /// <summary>
+    /// The source health is unknown.
+    /// </summary>
+    Unknown = -1,
+
+    /// <summary>
     /// The source has recently emitted output.
     /// </summary>
     Connected = 0,
