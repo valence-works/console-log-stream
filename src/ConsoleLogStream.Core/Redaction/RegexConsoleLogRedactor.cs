@@ -24,7 +24,8 @@ public sealed class RegexConsoleLogRedactor : IConsoleLogRedactor
     public ConsoleLogLine Redact(ConsoleLogLine line)
     {
         var source = Redact(line.Source);
-        return line with { Text = RedactValue(line.Text), Source = source };
+        var metadata = line.Metadata.ToDictionary(x => RedactValue(x.Key), x => RedactValue(x.Value), StringComparer.OrdinalIgnoreCase);
+        return line with { Text = RedactValue(line.Text), Source = source, Metadata = metadata };
     }
 
     /// <inheritdoc />

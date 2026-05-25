@@ -44,10 +44,17 @@ public sealed class AspNetCoreConsoleLogStreamTests
 
         var provider = app.Services.GetRequiredService<IConsoleLogProvider>();
         var source = app.Services.GetRequiredService<IConsoleLogSourceRegistry>().Current;
-        await provider.PublishAsync(new ConsoleLogLine { Source = source, Stream = ConsoleStream.Stdout, Text = "from hub" });
-
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        var item = await channel.ReadAsync(cts.Token);
+        var readTask = channel.ReadAsync(cts.Token).AsTask();
+
+        while (!readTask.IsCompleted)
+        {
+            await provider.PublishAsync(new ConsoleLogLine { Source = source, Stream = ConsoleStream.Stdout, Text = "from hub" });
+            if (await Task.WhenAny(readTask, Task.Delay(50, cts.Token)) == readTask)
+                break;
+        }
+
+        var item = await readTask;
 
         Assert.Equal("from hub", item.Line?.Text);
         await connection.DisposeAsync();

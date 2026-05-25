@@ -21,7 +21,7 @@ internal static class ConsoleLogFilterMatcher
         if (!string.IsNullOrWhiteSpace(filter.Query) && !ContainsQuery(line, filter.Query))
             return false;
 
-        if (!string.IsNullOrWhiteSpace(filter.WorkflowInstanceId) && !string.Equals(line.WorkflowInstanceId, filter.WorkflowInstanceId, StringComparison.OrdinalIgnoreCase))
+        if (!MatchesMetadata(line.Metadata, filter.Metadata))
             return false;
 
         return true;
@@ -34,6 +34,18 @@ internal static class ConsoleLogFilterMatcher
             || line.Source.DisplayName.Contains(query, StringComparison.OrdinalIgnoreCase)
             || (line.Source.ServiceName?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
             || (line.Source.MachineName?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
+            || line.Metadata.Any(x => x.Key.Contains(query, StringComparison.OrdinalIgnoreCase) || x.Value.Contains(query, StringComparison.OrdinalIgnoreCase))
             || line.Source.Metadata.Any(x => x.Key.Contains(query, StringComparison.OrdinalIgnoreCase) || x.Value.Contains(query, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool MatchesMetadata(IReadOnlyDictionary<string, string> lineMetadata, IReadOnlyDictionary<string, string> filterMetadata)
+    {
+        foreach (var (key, value) in filterMetadata)
+        {
+            if (!lineMetadata.TryGetValue(key, out var candidate) || !string.Equals(candidate, value, StringComparison.OrdinalIgnoreCase))
+                return false;
+        }
+
+        return true;
     }
 }

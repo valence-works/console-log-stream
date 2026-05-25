@@ -36,9 +36,9 @@ public sealed record ConsoleLogLine
     public string Text { get; init; } = "";
 
     /// <summary>
-    /// Optional workflow instance identifier associated with this line.
+    /// Optional redacted line metadata supplied by consumers.
     /// </summary>
-    public string? WorkflowInstanceId { get; init; }
+    public IReadOnlyDictionary<string, string> Metadata { get; init; } = new Dictionary<string, string>();
 
     /// <summary>
     /// Redacted source descriptor.

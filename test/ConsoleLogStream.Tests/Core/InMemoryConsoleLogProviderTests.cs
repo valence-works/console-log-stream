@@ -59,4 +59,38 @@ public sealed class InMemoryConsoleLogProviderTests
         Assert.Equal("two", result.Items[0].Text);
         Assert.Contains(result.Dropped, x => x.Reason == "recent-buffer-overflow");
     }
+
+    [Fact]
+    public async Task RecentQueriesApplyMetadataFilters()
+    {
+        var services = new ServiceCollection()
+            .AddConsoleLogStream(options => options.SourceId = "source-a")
+            .BuildServiceProvider();
+
+        var provider = services.GetRequiredService<IConsoleLogProvider>();
+        var source = services.GetRequiredService<IConsoleLogSourceRegistry>().Current;
+
+        await provider.PublishAsync(new ConsoleLogLine
+        {
+            Source = source,
+            Stream = ConsoleStream.Stdout,
+            Text = "first",
+            Metadata = new Dictionary<string, string> { ["tenant"] = "alpha" }
+        });
+        await provider.PublishAsync(new ConsoleLogLine
+        {
+            Source = source,
+            Stream = ConsoleStream.Stdout,
+            Text = "second",
+            Metadata = new Dictionary<string, string> { ["tenant"] = "beta" }
+        });
+
+        var result = await provider.GetRecentAsync(new ConsoleLogFilter
+        {
+            Metadata = new Dictionary<string, string> { ["tenant"] = "alpha" }
+        });
+
+        var line = Assert.Single(result.Items);
+        Assert.Equal("first", line.Text);
+    }
 }

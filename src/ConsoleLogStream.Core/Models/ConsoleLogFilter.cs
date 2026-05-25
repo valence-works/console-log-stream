@@ -21,9 +21,9 @@ public sealed record ConsoleLogFilter
     public string? Query { get; init; }
 
     /// <summary>
-    /// Optional exact workflow instance identifier.
+    /// Optional exact line metadata filters. All provided key/value pairs must match.
     /// </summary>
-    public string? WorkflowInstanceId { get; init; }
+    public IReadOnlyDictionary<string, string> Metadata { get; init; } = new Dictionary<string, string>();
 
     /// <summary>
     /// Inclusive lower bound for provider receive time.
