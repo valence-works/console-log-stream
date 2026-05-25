@@ -36,6 +36,11 @@ public sealed record ConsoleLogLine
     public string Text { get; init; } = "";
 
     /// <summary>
+    /// Optional workflow instance identifier associated with this line.
+    /// </summary>
+    public string? WorkflowInstanceId { get; init; }
+
+    /// <summary>
     /// Redacted source descriptor.
     /// </summary>
     public ConsoleLogSource Source { get; init; } = new();

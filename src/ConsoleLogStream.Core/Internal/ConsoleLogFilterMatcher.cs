@@ -21,6 +21,9 @@ internal static class ConsoleLogFilterMatcher
         if (!string.IsNullOrWhiteSpace(filter.Query) && !ContainsQuery(line, filter.Query))
             return false;
 
+        if (!string.IsNullOrWhiteSpace(filter.WorkflowInstanceId) && !string.Equals(line.WorkflowInstanceId, filter.WorkflowInstanceId, StringComparison.OrdinalIgnoreCase))
+            return false;
+
         return true;
     }
 
@@ -29,6 +32,8 @@ internal static class ConsoleLogFilterMatcher
         return line.Text.Contains(query, StringComparison.OrdinalIgnoreCase)
             || line.Source.Id.Contains(query, StringComparison.OrdinalIgnoreCase)
             || line.Source.DisplayName.Contains(query, StringComparison.OrdinalIgnoreCase)
-            || (line.Source.ServiceName?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false);
+            || (line.Source.ServiceName?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (line.Source.MachineName?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
+            || line.Source.Metadata.Any(x => x.Key.Contains(query, StringComparison.OrdinalIgnoreCase) || x.Value.Contains(query, StringComparison.OrdinalIgnoreCase));
     }
 }
