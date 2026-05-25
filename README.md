@@ -197,6 +197,8 @@ GitHub Actions publishes packages from `.github/workflows/nuget.yml`:
 
 - Pushes to `main` publish preview packages using
   `{VersionPrefix}-preview.{GITHUB_RUN_NUMBER}`.
+- Manual `workflow_dispatch` runs publish preview packages using the same
+  preview version format.
 - Published GitHub releases publish stable packages using `VersionPrefix`.
 - Release tags must match the `VersionPrefix` in `Directory.Build.props`, e.g.
   `1.2.3` or `v1.2.3`.
