@@ -11,3 +11,4 @@ TestResults/
 .vscode/
 .env*
 *.log
+*.db

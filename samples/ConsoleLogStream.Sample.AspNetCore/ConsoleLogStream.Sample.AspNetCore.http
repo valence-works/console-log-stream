@@ -1,0 +1,28 @@
+@host = http://localhost:5000
+
+### Welcome
+GET {{host}}/
+
+### Write sample log lines
+GET {{host}}/write
+
+### Recent console logs (no filters)
+GET {{host}}/diagnostics/console-logs/recent
+
+### Recent console logs - filter by source
+GET {{host}}/diagnostics/console-logs/recent?sourceId=sample
+
+### Recent console logs - filter by stream (0 = Stdout, 1 = Stderr)
+GET {{host}}/diagnostics/console-logs/recent?stream=0
+
+### Recent console logs - text search
+GET {{host}}/diagnostics/console-logs/recent?query=password
+
+### Recent console logs - with limit
+GET {{host}}/diagnostics/console-logs/recent?limit=5
+
+### Recent console logs - combined filters
+GET {{host}}/diagnostics/console-logs/recent?sourceId=sample&stream=1&limit=10
+
+### List console log sources
+GET {{host}}/diagnostics/console-logs/sources
